@@ -165,3 +165,14 @@ Edit the script:
 - Set HYSPLIT_DIR to the path where you extracted the HYSPLIT binaries.
 - Set MET to the path where your meteorological data files are located.
 - Set your email address for PBS notifications.
+
+### Submit the job:
+```bash
+qsub hysplit_test.pbs
+```
+
+#### 6. Notes
+- This script assumes you have the required meteorological files in /work/data/.
+- If you need more CPUs or memory, adjust the #PBS -l select=... line.
+- If you need to load modules for Intel or NetCDF, uncomment and adjust the module load lines.
+- The script will run in the directory from which you submit it ($PBS_O_WORKDIR).
