@@ -176,3 +176,29 @@ qsub hysplit_test.pbs
 - If you need more CPUs or memory, adjust the #PBS -l select=... line.
 - If you need to load modules for Intel or NetCDF, uncomment and adjust the module load lines.
 - The script will run in the directory from which you submit it ($PBS_O_WORKDIR).
+
+### MPI Parallelization (if you have hycs_mpi).
+If you have the MPI-enabled HYSPLIT binary (hycs_mpi), you can run a single simulation in parallel using MPI.
+#### PBS Script Example:
+```bash
+#!/bin/bash
+#PBS -N hysplit_mpi
+#PBS -l select=1:ncpus=8:mpiprocs=8:mem=8gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+#PBS -o hysplit_mpi.log
+
+module load intel/2020u1
+module load chpc/earth/netcdf/4.7.4/intel2020u1
+module load openmpi  # or your system's MPI module
+
+export HYSPLIT_DIR=/path/to/hysplit.v5.4.2_x86_64
+export PATH=$HYSPLIT_DIR/exec:$PATH
+cd $PBS_O_WORKDIR
+
+# (create CONTROL file as before)
+
+mpirun -np 8 $HYSPLIT_DIR/exec/hycs_mpi
+```
+Here is a full PBS script for running a HYSPLIT MPI run. This is suitable for Lengau or any PBS-based HPC, using your pre-compiled binaries. Save this as ```hysplit_mpi.pbs``` (or similar):
+```bash
