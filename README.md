@@ -290,6 +290,12 @@ mpirun -np 8 $MDL/exec/hycs_mpi
 mv cdump ${poll}${smo}${sda}
 
 ```
+
+#### Submit the job: 
+```bash
+qsub hysplit_mpi.pbs
+```
+
 #### How to Use
 Edit the script:
 - Set HYSPLIT_DIR to your HYSPLIT install path.
