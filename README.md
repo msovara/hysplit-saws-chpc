@@ -69,3 +69,99 @@ Summary:
 - Set environment variables.
 - Add the exec/ directory to your PATH.
 - Run the provided executables.
+
+## 5. PBS Batch Script Example
+Save this as ```hysplit_test.pbs``` (or similar):
+```bash
+#!/bin/bash
+#PBS -N hysplit_test
+#PBS -l select=1:ncpus=1:mem=2gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+#PBS -o hysplit_test.log
+#PBS -m abe
+#PBS -M your.email@domain.com
+
+# Load any required modules (if needed)
+# module load intel/2020u1
+# module load chpc/earth/netcdf/4.7.4/intel2020u1
+
+# Set up environment variables
+export HYSPLIT_DIR=/path/to/hysplit.v5.4.2_x86_64
+export PATH=$HYSPLIT_DIR/exec:$PATH
+
+# Set working directory to where you submitted the job
+cd $PBS_O_WORKDIR
+
+# Set model variables
+MDL="$HYSPLIT_DIR"
+OUT="."
+MET="/work/data"
+
+poll="IND"
+syr=98
+smo=05
+shr=00
+
+olat=27.00
+olon=72.05
+olvl=10.0
+
+run=840
+ztop=10000.0
+met1="fnl.nh.may98.001"
+met2="fnl.nh.may98.002"
+met3="fnl.nh.jun98.001"
+
+for sda in 12 13 14 15; do
+  cat > CONTROL <<EOF
+$syr $smo $sda $shr    
+1                      
+$olat $olon $olvl      
+$run                   
+0                      
+$ztop                  
+3                      
+$MET/                  
+$met1                  
+$MET/                  
+$met2                  
+$MET/                  
+$met3                  
+1                      
+$poll                  
+10.0                   
+0.1                    
+$syr $smo $sda $shr 00 
+1                      
+30.0 70.0              
+0.50 0.50              
+20.0 20.0              
+$OUT/                  
+cdump                  
+1                      
+10                     
+00 00 00 00 00         
+00 00 00 00 00         
+00 24 00               
+1                      
+0.0 0.0 0.0            
+0.0 0.0 0.0 0.0 0.0    
+0.0 0.0 0.0            
+5.27                   
+0.0                    
+EOF
+
+  # Run the model
+  [ -f cdump ] && rm cdump
+  $MDL/exec/hycs_std
+  mv cdump ${poll}${smo}${sda}
+
+  run=$((run-24))
+done
+
+```
+Edit the script:
+- Set HYSPLIT_DIR to the path where you extracted the HYSPLIT binaries.
+- Set MET to the path where your meteorological data files are located.
+- Set your email address for PBS notifications.
