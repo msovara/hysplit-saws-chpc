@@ -25,3 +25,47 @@ Before installation, ensure the following software is installed on your system:
 - NetCDF library – necessary if you're converting WRF-ARW data fields.
 
 This tutorial outlines two primary methods: **installing a pre-compiled binary** or compiling the source code yourself. The focus of this tutorial will be on the former rather than the latter.
+
+---
+
+With pre-compiled binaries, you do not need to build HYSPLIT, the compilation has already been done for you. Instead, simply set up the environment and run the provided executables. 
+
+## 1. Locate the Executables
+
+Look for a directory named ```exec/``` (or sometimes ```bin/```) inside your extracted HYSPLIT directory. It should contain files like:
+- ```hyts_std```
+- ```hycs_std```
+- ```con2stn```
+- ```trajplot```
+- etc.
+
+List them with:
+```bash
+ls hysplit.v5.4.2_x86_64/exec/
+```
+
+## 2. Set Up the Environment
+
+You may need to set some environment variables so HYSPLIT can find its data and run correctly. This is usually described in a ```README``` or ```INSTALL``` file in the package.
+Variables to set:
+```bash
+export HYSPLIT_DIR=/path/to/hysplit.v5.4.2_x86_64
+export PATH=$HYSPLIT_DIR/exec:$PATH
+```
+Replace /path/to/hysplit.v5.4.2_x86_64 with the actual path to your extracted directory.
+
+## 3. Test the installation
+Try running one of the executables
+```bash
+hyts_std
+# OR
+$HYSPLIT_DIR/exec/hyts_std
+```
+## 4. Run Example Jobs
+There are usually example input files and scripts in the package (often in an ```example/``` or ```working/``` directory). You can try running an example job to verify everything works.
+
+Summary:
+- No build step is needed.
+- Set environment variables.
+- Add the exec/ directory to your PATH.
+- Run the provided executables.
