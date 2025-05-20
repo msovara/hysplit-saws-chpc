@@ -202,3 +202,97 @@ mpirun -np 8 $HYSPLIT_DIR/exec/hycs_mpi
 ```
 Here is a full PBS script for running a HYSPLIT MPI run. This is suitable for Lengau or any PBS-based HPC, using your pre-compiled binaries. Save this as ```hysplit_mpi.pbs``` (or similar):
 ```bash
+#!/bin/bash
+#PBS -N hysplit_mpi
+#PBS -l select=1:ncpus=8:mpiprocs=8:mem=8gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+#PBS -o hysplit_mpi.log
+
+# Load modules (adjust as needed for your environment)
+module load intel/2020u1
+module load chpc/earth/netcdf/4.7.4/intel2020u1
+module load openmpi  # or your system's MPI module
+
+# Set up environment
+export HYSPLIT_DIR=/path/to/hysplit.v5.4.2_x86_64
+export PATH=$HYSPLIT_DIR/exec:$PATH
+
+cd $PBS_O_WORKDIR
+
+# Model variables
+MDL="$HYSPLIT_DIR"
+OUT="."
+MET="/work/data"
+
+poll="IND"
+syr=98
+smo=05
+shr=00
+
+olat=27.00
+olon=72.05
+olvl=10.0
+
+run=840
+ztop=10000.0
+met1="fnl.nh.may98.001"
+met2="fnl.nh.may98.002"
+met3="fnl.nh.jun98.001"
+sda=12  # Set the day you want to run
+
+# Create CONTROL file
+cat > CONTROL <<EOF
+$syr $smo $sda $shr    
+1                      
+$olat $olon $olvl      
+$run                   
+0                      
+$ztop                  
+3                      
+$MET/                  
+$met1                  
+$MET/                  
+$met2                  
+$MET/                  
+$met3                  
+1                      
+$poll                  
+10.0                   
+0.1                    
+$syr $smo $sda $shr 00 
+1                      
+30.0 70.0              
+0.50 0.50              
+20.0 20.0              
+$OUT/                  
+cdump                  
+1                      
+10                     
+00 00 00 00 00         
+00 00 00 00 00         
+00 24 00               
+1                      
+0.0 0.0 0.0            
+0.0 0.0 0.0 0.0 0.0    
+0.0 0.0 0.0            
+5.27                   
+0.0                    
+EOF
+
+# Remove old output if present
+[ -f cdump ] && rm cdump
+
+# Run HYSPLIT in MPI mode
+mpirun -np 8 $MDL/exec/hycs_mpi
+
+# Rename output for this run
+mv cdump ${poll}${smo}${sda}
+
+```
+#### How to Use
+Edit the script:
+- Set HYSPLIT_DIR to your HYSPLIT install path.
+- Set MET to your meteorological data directory.
+- Adjust ncpus, mpiprocs, and -np to the number of CPUs you want to use.
+- Set sda to the day you want to run (or loop over days if you want).
