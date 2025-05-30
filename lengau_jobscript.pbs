@@ -1,0 +1,28 @@
+#!/bin/bash
+#PBS -N HYSPLIT_Sim
+#PBS -l walltime=12:00:00
+#PBS -l select=1:ncpus=24:mpiprocs=24
+#PBS -q normal
+#PBS -P <YOUR_PROJECT_ID>  # Replace with actual project ID
+#PBS -o stdout.log
+#PBS -e stderr.log
+
+# Initialize environment
+module purge
+module use /apps/chpc/scripts/modules
+module load earth/hysplit/5.4.2
+
+# Configure workspace
+WORKDIR=${LUSTRE_SCRATCH}/hysplit_working_${PBS_JOBID}
+cp -r $HYSPLIT_WORKING ${WORKDIR}
+cd ${WORKDIR}
+
+# Runtime configuration (customize before submission)
+sed -i "s|/default/path|${WORKDIR}|" CONTROL   # Update paths
+# Add other pre-run configurations here
+
+# Execute simulation
+$HYSPLIT_EXEC/hycs_std
+
+# Post-processing (example)
+echo "Simulation completed at $(date)" >> status.log
