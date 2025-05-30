@@ -1,11 +1,25 @@
-# hysplit-saws-chpc
-HYSPLIT is a NOAA model used to simulate the transport and dispersion of airborne particles and pollutants using meteorological data.
+# Running HYSPLI 5.4.2 on LENGAU
+## Overview
+This guide describes how to set up and run the HYSPLIT 5.4.2 atmospheric transport and dispersion model on the Lengau HPC cluster using the Intel toolchain.
 
-✅ What this repository aims to do:
-- Download the source code and data files from your ```/home``` or ```/lustre``` directory.
-- Compiling HYSPLIT from source using Intel or GNU compilers (Lengau has both).
-- Running HYSPLIT via interactive jobs or batch scripts (using PBS-Pro).
-  
+## Prerequisites
+- Access to the Lengau HPC cluster.
+- A valid Lustre scratch directory (for running simulations).
+- Basic knowledge of Linux command line and PBS job submission.
+
+## 1. Loading the HYSPLIT Module
+First, add the custom modules path and load the HYSPLIT module:
+```bash
+module use /apps/chpc/scripts/modules
+module load earth/hysplit/5.4.2
+```
+## 2. Set Up Your Working Directory
+You must not run simulations in the central install directory. Instead, copy the working directory to your Lustre scratch space:
+```bash
+cp -r $HYSPLIT_WORKING /home/userid/lustre/hysplit_working
+cd hysplit_working
+```
+
 Currently, several LINUX distributions (executables) are available as zipped tar files to "registered" HYSPLIT users, with more "flavours" being added in the near future. 
 
 Pre-Compiled Distributions:
