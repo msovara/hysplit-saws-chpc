@@ -23,7 +23,7 @@ Before installation, ensure the following software is installed on your system:
 - gfortran and gcc compilers – required for compiling the source code.
 - NetCDF library – necessary if you're converting WRF-ARW data fields.
 
-This tutorial outlines two methods: **installing a pre-compiled binary** or **compiling the source code*** yourself. The focus of this tutorial will be on the former rather than the latter.
+This tutorial outlines two methods: **installing a pre-compiled binary** or **compiling the source code** yourself. The focus of this tutorial will be on the former rather than the latter.
 
 ---
 
