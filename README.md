@@ -4,7 +4,7 @@ HYSPLIT is a NOAA model used to simulate the transport and dispersion of airborn
 ✅ What this repository aims to do:
 - Download the source code and data files from your /home or Lustre directory.
 - Compiling HYSPLIT from source using Intel or GNU compilers (Lengau has both).
-- Running HYSPLIT via interactive jobs or batch scripts (using Slurm).
+- Running HYSPLIT via interactive jobs or batch scripts (using PBS-Pro).
   
 Currently, several LINUX distributions (executables) are available as zipped tar files to "registered" HYSPLIT users, with more "flavours" being added in the near future. 
 
