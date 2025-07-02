@@ -22,10 +22,10 @@ module load earth/hysplit/5.4.2
 ```
 
 ## 📁 2. Configure Working Directory
-You must not run simulations in the central install directory. Instead, copy the working directory to your Lustre scratch space:
+Create a working directory in your Lustre scratch space:
 ```bash
-cp -r $HYSPLIT_WORKING ${LUSTRE_SCRATCH}/hysplit_working
-cd ${LUSTRE_SCRATCH}/hysplit_working
+mkdir hysplit_working
+cd hysplit_working
 ```
 Replace with your actual Lustre scratch path.
 
